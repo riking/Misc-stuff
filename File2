@@ -16,7 +16,7 @@ import java.io.*;
  * Framework written by www.javadb.com
  * 
  */
-public abstract class Grapher extends javax.swing.JFrame {
+public abstract class Grapher implements Runnable {
 	private short fcount=0;
 	private short maxfail=100;
 	private Graphics2D g2;
@@ -28,13 +28,13 @@ public abstract class Grapher extends javax.swing.JFrame {
 	double x,y,dist,tdist,dx,dy,range;
 	Node selNode,curNode;
 	boolean cont;
-    /**
-	 * Constructors
-     * Creates a new instance of Java2DFrame
-     */
+	public List<Node> nodeList;
+
+	private Graphics2D picture;
+
 	public Grapher(boolean fill, double frac)
 	{
-		initImage();
+		picture = initImage();
 		rand = new Random();
     }
 	//
@@ -53,6 +53,10 @@ public abstract class Grapher extends javax.swing.JFrame {
 		g2.setBackground(Color.white);
 		g2.setPaint(Color.black);
 	}
+
+	public void run()
+	{
+	}
 	public abstract void newRange(int step);//starts @ 0
 	public void doStep(int stepId)
 	{
@@ -62,7 +66,7 @@ public abstract class Grapher extends javax.swing.JFrame {
 		{
 			x=rand.nextDouble()*imgSize;
 			y=rand.nextDouble()*imgSize;
-			ListIterator<Node> liter = GraphMain.nodeList.listIterator();
+			ListIterator<Node> liter = nodeList.listIterator();
 			dist=range;
 			selNode=null;
 			while(liter.hasNext())
@@ -85,7 +89,7 @@ public abstract class Grapher extends javax.swing.JFrame {
 				dy=(y-selNode.Y)/dist*range;
 				curNode=new Node(selNode.X+dx,selNode.Y+dy);
 				selNode.connections.add(curNode);
-				GraphMain.nodeList.add(curNode);
+				nodeList.add(curNode);
 				g2.draw(new Line2D.Double(selNode.X,selNode.Y,curNode.X,curNode.Y));
 				fcount=0;
 			}
@@ -98,7 +102,7 @@ public abstract class Grapher extends javax.swing.JFrame {
 	}
 		/*
 		g2.setPaint(Color.blue);
-		ListIterator<Node> liter = GraphMain.nodeList.listIterator();
+		ListIterator<Node> liter = nodeList.listIterator();
 		while(liter.hasNext())
 		{
 			curNode=(Node)liter.next();
@@ -109,18 +113,8 @@ public abstract class Grapher extends javax.swing.JFrame {
 	{
 		result=new BufferedImage(GraphMain.scale,GraphMain.scale, BufferedImage.TYPE_INT_ARGB);
 		g2 = result.createGraphics();
+		nodeList = new ArrayList<Node>();
+		nodeList.add(new Node((double)scale/2,(double)scale/2));
 		return(g2);
-		/*setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 300, Short.MAX_VALUE)
-        );
-        pack();*/
-    }// </editor-fold>
+    }
 }

@@ -8,7 +8,7 @@ public class GraphMain {
 	public static int scale=100;
 	public static boolean fillwhite=false;
 	public static double fraction=.66666666666666666666666666666d;
-	public static List<Node> nodeList;
+
 	public static void main(String args[]) {
 		//primitive and restrictive arg-parse
 		try
@@ -44,11 +44,10 @@ public class GraphMain {
 			System.err.println("You are a naughty kid. Try --help.");
 			System.out.println("You are a naughty kid.");
 		}
-		//init
-		nodeList = new ArrayList<Node>();
-		nodeList.add(new Node((double)scale/2,(double)scale/2));
+
 		
 		Grapher graphinst = new Grapher(fillwhite,fraction);
+		graphinst.run();
 		try {
 			int r=new Random().nextInt(99);
 			Map<String,String> sysenv=System.getenv();

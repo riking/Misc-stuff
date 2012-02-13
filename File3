@@ -1,0 +1,63 @@
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+public class GraphMain {
+  public static double range=20d;
+	public static int scale=100;
+	public static boolean fillwhite=false;
+	public static double fraction=.66666666666666666666666666666d;
+	public static List<Node> nodeList;
+	public static void main(String args[]) {
+		//primitive and restrictive arg-parse
+		try
+		{
+			if(args.length>0)
+			{
+				if(args[0]=="--help" || args[0]=="/?" || args[0]=="/help" || args[0]=="-?")
+				{
+					System.out.println("Usage: java GraphMain [fillwhite] [size] [range]");
+					System.out.println(" ");
+					System.out.println("Arg 1: Fill white (y/n) [DEFAULT: yes]");
+					System.out.println("Arg 2: Size of image (int) [DEFAULT: 1024]");
+					System.out.println("Arg 3: Minimum starting node distance (double) [DEFAULT: 20]");
+					System.out.println("Arg 4: Distance decrease factor (double) (1/e is not allowed) [DEFAULT: 2/3]");
+				}
+				fillwhite=Boolean.parseBoolean(args[0]);
+				if(args.length>1)
+				{
+					scale=Integer.parseInt(args[1]);
+					if(args.length>2)
+					{
+						range=Double.parseDouble(args[2]);
+						if(args.length>3)
+						{
+							fraction=Double.parseDouble(args[3]);
+							if(fraction >= 1) throw new NumberFormatException("Fraction must be less than 1");
+						}
+					}
+				}
+			}
+		} catch(NumberFormatException e)
+		{
+			System.err.println("You are a naughty kid. Try --help.");
+			System.out.println("You are a naughty kid.");
+		}
+		//init
+		nodeList = new ArrayList<Node>();
+		nodeList.add(new Node((double)scale/2,(double)scale/2));
+		
+		Grapher graphinst = new Grapher(fillwhite,fraction);
+		try {
+			int r=new Random().nextInt(99);
+			Map<String,String> sysenv=System.getenv();
+			System.out.println("Writing to "+sysenv.get("USERPROFILE")+"\\Desktop\\graph_"+r+"_rrt.png");
+			File f=new File(sysenv.get("USERPROFILE")+"\\Desktop\\graph_"+r+"_rrt.png");
+			f.mkdirs();
+			ImageIO.write(graphinst.result, "PNG", f);
+		} catch(IOException e) {
+			e.printStackTrace(System.err);
+		}
+    }
+}

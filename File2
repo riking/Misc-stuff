@@ -31,7 +31,7 @@ public abstract class Grapher implements Runnable {
 
 	public Grapher(boolean fill, double frac)
 	{
-		g2 = initImage();
+		initImage();
 		rand = new Random();
 	}
 	//
@@ -50,7 +50,7 @@ public abstract class Grapher implements Runnable {
 	public void run()
 	{
 		readyPaint();
-	
+		doStep(0);
 	}
 	public abstract void newRange(int step);//starts @ 0
 	public void doStep(int stepId)
@@ -103,13 +103,12 @@ public abstract class Grapher implements Runnable {
 			curNode=(Node)liter.next();
 			g2.draw(new Ellipse2D.Double(curNode.X*GraphMain.scale,curNode.Y*GraphMain.scale,GraphMain.range/2,GraphMain.range/2));
 		}
-    }*/
-    private Graphics2D initImage()
+	}*/
+	private void initImage()
 	{
 		result=new BufferedImage(GraphMain.scale,GraphMain.scale, BufferedImage.TYPE_INT_ARGB);
 		g2 = result.createGraphics();
 		nodeList = new ArrayList<Node>();
 		nodeList.add(new Node((double)scale/2,(double)scale/2));
-		return(g2);
-    }
+	}
 }

@@ -1,0 +1,126 @@
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import javax.swing.JFrame;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Random;
+import java.lang.Math;
+import java.util.Map;
+import java.io.*;
+/**
+ * Displays a JFrame and draws a line on it using the Java 2D Graphics API
+ * Can be run on own
+ *
+ * Framework written by www.javadb.com
+ * 
+ */
+public abstract class Grapher extends javax.swing.JFrame {
+	private short fcount=0;
+	private short maxfail=100;
+	private Graphics2D g2;
+	private Random rand;
+	public BufferedImage result;
+	public int imgSize;
+	public double startRange;
+
+	double x,y,dist,tdist,dx,dy,range;
+	Node selNode,curNode;
+	boolean cont;
+    /**
+	 * Constructors
+     * Creates a new instance of Java2DFrame
+     */
+	public Grapher(boolean fill, double frac)
+	{
+		initImage();
+		rand = new Random();
+    }
+	//
+	public void setBaseVars(int s, double d)
+	{
+		imgSize=s;
+		range=d;
+	}
+    /**
+     * This is the method where the stuff is drawn.
+     *
+     * @param g The graphics object
+     */
+    public void readyPaint(Graphics2D g2)
+	{
+		g2.setBackground(Color.white);
+		g2.setPaint(Color.black);
+	}
+	public abstract void newRange(int step);//starts @ 0
+	public void doStep(int stepId)
+	{
+		newRange(stepId);
+		cont=true;
+		while(cont)
+		{
+			x=rand.nextDouble()*imgSize;
+			y=rand.nextDouble()*imgSize;
+			ListIterator<Node> liter = GraphMain.nodeList.listIterator();
+			dist=range;
+			selNode=null;
+			while(liter.hasNext())
+			{
+				curNode=(Node)liter.next();
+				tdist=Math.sqrt((x-curNode.X)*(x-curNode.X)+(y-curNode.Y)*(y-curNode.Y));
+				if (tdist<dist)
+				{
+					dist=tdist;
+					selNode=curNode;
+				}
+				if(dist<range)
+				{
+					cont=false; break;
+				}
+			}
+			if(cont)
+			{
+				dx=(x-selNode.X)/dist*range;
+				dy=(y-selNode.Y)/dist*range;
+				curNode=new Node(selNode.X+dx,selNode.Y+dy);
+				selNode.connections.add(curNode);
+				GraphMain.nodeList.add(curNode);
+				g2.draw(new Line2D.Double(selNode.X,selNode.Y,curNode.X,curNode.Y));
+				fcount=0;
+			}
+			else
+			{
+				fcount++;
+				if(fcount < maxfail) cont=true;
+			}
+		}
+	}
+		/*
+		g2.setPaint(Color.blue);
+		ListIterator<Node> liter = GraphMain.nodeList.listIterator();
+		while(liter.hasNext())
+		{
+			curNode=(Node)liter.next();
+			g2.draw(new Ellipse2D.Double(curNode.X*GraphMain.scale,curNode.Y*GraphMain.scale,GraphMain.range/2,GraphMain.range/2));
+		}
+    }*/
+    private Graphics2D initImage()
+	{
+		result=new BufferedImage(GraphMain.scale,GraphMain.scale, BufferedImage.TYPE_INT_ARGB);
+		g2 = result.createGraphics();
+		return(g2);
+		/*setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 300, Short.MAX_VALUE)
+        );
+        pack();*/
+    }// </editor-fold>
+}

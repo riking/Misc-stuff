@@ -27,28 +27,21 @@ public abstract class Grapher implements Runnable {
 
 	double x,y,dist,tdist,dx,dy,range;
 	Node selNode,curNode;
-	boolean cont;
 	public List<Node> nodeList;
-
-	private Graphics2D picture;
 
 	public Grapher(boolean fill, double frac)
 	{
-		picture = initImage();
+		g2 = initImage();
 		rand = new Random();
-    }
+	}
 	//
 	public void setBaseVars(int s, double d)
 	{
 		imgSize=s;
 		range=d;
 	}
-    /**
-     * This is the method where the stuff is drawn.
-     *
-     * @param g The graphics object
-     */
-    public void readyPaint(Graphics2D g2)
+
+	public void readyPaint()
 	{
 		g2.setBackground(Color.white);
 		g2.setPaint(Color.black);
@@ -56,12 +49,14 @@ public abstract class Grapher implements Runnable {
 
 	public void run()
 	{
+		readyPaint();
+	
 	}
 	public abstract void newRange(int step);//starts @ 0
 	public void doStep(int stepId)
 	{
 		newRange(stepId);
-		cont=true;
+		boolean cont=true;
 		while(cont)
 		{
 			x=rand.nextDouble()*imgSize;

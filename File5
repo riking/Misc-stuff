@@ -1,0 +1,12 @@
+public class GrapherSingle extends Grapher
+{
+  public Object GuiStuff()
+	{
+		return null;
+	}
+	public boolean newRange(int stepid)
+	{
+		range=startRange;
+		return stepid==0;
+	}
+}

@@ -1,0 +1,14 @@
+import java.util.List;
+import java.util.ArrayList;
+
+public class Node
+{
+  public double X;
+	public double Y;
+	public List<Node> connections = new ArrayList<Node>();
+	public Node(double x,double y)
+	{
+		this.X=x;
+		this.Y=y;
+	}
+}

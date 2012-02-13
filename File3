@@ -46,7 +46,7 @@ public class GraphMain {
 		}
 
 		
-		Grapher graphinst = new Grapher(fillwhite,fraction);
+		Grapher graphinst = new GrapherSingle(fillwhite,fraction);
 		graphinst.run();
 		try {
 			int r=new Random().nextInt(99);

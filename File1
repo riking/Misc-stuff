@@ -1,13 +1,28 @@
-
 ; Heap allocation routine
 
 ;put this in program
-ADD [HEAP_END],0x1000 ; heap size
+;ADD [HEAP_END],0x1000 ; heap size
 
-:HEAP_INDEX
-                DAT HEAP_START
-:HEAP_INDEX_LAST
-                DAT HEAP_START
+;Program goes here
+ADD [HEAP_END],0x1000
+
+SET A, 5
+JSR heap_allocate ;allocate some memory
+SET X, A
+SET [X+1], 30
+SET A, 30
+JSR heap_allocate ; more memory!
+JSR heap_delete
+SET A, 0xfa3
+JSR heap_allocate ; allocate my ass
+
+:halt
+SET PC, halt
+
+;Program ends here
+
+
+
 
 ;@params A: size
 :heap_allocate 
@@ -51,6 +66,17 @@ ADD [HEAP_END],0x1000 ; heap size
                 SET PC, POP
 ;IMPORTANT!!
 ; LEAVE THESE AT THE END OF THE PROGRAM
+DAT 0
+DAT 0
+DAT 0
+DAT 0
 :HEAP_END
-                DAT HEAP_START ; is init'd to heap_start plus size
+                DAT HEAP_START ; is init'd to heap_start plus
+:HEAP_INDEX
+                DAT HEAP_START
+:HEAP_INDEX_LAST
+                DAT HEAP_START
+DAT 0 ;filler so we know where it is
+DAT 0
+DAT 0
 :HEAP_START     DAT 0

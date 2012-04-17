@@ -2,3 +2,11 @@
 
 dynamic execution
 :dyn_run
+    DAT 0
+    DAT 0
+    DAT 0
+    DAT 0
+    DAT 0
+    DAT 0
+    DAT 0
+    SET PC, POP

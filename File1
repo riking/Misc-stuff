@@ -1,12 +1,56 @@
-- accessing PC+1?
 
-dynamic execution
-:dyn_run
-    DAT 0
-    DAT 0
-    DAT 0
-    DAT 0
-    DAT 0
-    DAT 0
-    DAT 0
-    SET PC, POP
+; Heap allocation routine
+
+;put this in program
+ADD [HEAP_END],0x1000 ; heap size
+
+:HEAP_INDEX
+                DAT HEAP_START
+:HEAP_INDEX_LAST
+                DAT HEAP_START
+
+;@params A: size
+:heap_allocate 
+                SET [HEAP_INDEX_LAST],[HEAP_INDEX]
+    ;set the heapindexlast to the start of the new data
+    ;    Note that the HEAP_INDEXes differ from the returned values by two.
+    ;    You want to tell them where their data starts, not where your metadata does.
+                SET B, [HEAP_INDEX]
+    ;store the current heapindex in B
+    ;Now, we want to know where the new heapindex will be.
+    ; So, we make a copy, add the requested size, and add two for our reserved vars.
+                SET C,B
+                ADD C,A
+                IFG O,[HEAP_END]
+                    JSR heap_moveheap ; this happens if our heap is about to overflow
+                ADD C,2
+                IFG O,[HEAP_END]
+                    JSR heap_moveheap ; this happens if our heap is about to overflow
+                SET [B], [HEAP_INDEX_LAST] ; set the first object byte to the last heap object
+    ;set the last heap object pointer, for traversal
+                SET [B+1], 0
+    ;set the garbage collection variable
+                SET [HEAP_INDEX],C
+    ;set the new heap index
+                SET A, B
+                ADD A, 2
+    ;prep the return value
+                SET B, 0
+                SET C, 0
+    ;clobber the registers we used
+                SET PC, POP
+    ;return
+
+ ;@params A: location
+:heap_delete
+                SET [A-1], 1
+                SET PC, POP
+:heap_gc
+                SET PC, POP
+:heap_moveheap
+                SET PC, POP
+;IMPORTANT!!
+; LEAVE THESE AT THE END OF THE PROGRAM
+:HEAP_END
+                DAT HEAP_START ; is init'd to heap_start plus size
+:HEAP_START     DAT 0

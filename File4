@@ -1,14 +1,16 @@
-import java.util.List;
-import java.util.ArrayList;
-
-public class Node
-{
-  public double X;
-	public double Y;
-	public List<Node> connections = new ArrayList<Node>();
-	public Node(double x,double y)
-	{
-		this.X=x;
-		this.Y=y;
-	}
-}
+IndustrialCraft System Monitor    |  Menu         --
+Status:  MV/10011/221/111         | H HV Mode     --
+                              (E) | M MV Mode     --
+Solar===>MFSU>=============>->MFE | L LV Mode     --
+         (E)   [X] [I]        [I] | N Turn on LVT --
+              Mass Charger    [I] | 
+              Fab             [I] | C Cmprsr   on --
+                   Compressor[=I] | E Extrctr  on --
+                    Extractor[-|] | I IFurnace off--
+                   I. Furnace[#I] | R Macrtr   off--
+                    Macerator[@|] |               --
+                              [I] |  
+                     Canner   [I] | Q Quit
+                     [o]      <X> | 
+         oooooooooooooooo< BatBox | 
+                            (E)   |_ -- <-- cursor
